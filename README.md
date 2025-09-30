@@ -5,7 +5,7 @@ Monitor environmental air quality and air pollution
 Supported sensors:
 
 - [SPS30](https://sensirion.com/products/catalog/SPS30) (Particular sensor PM1.0, PM2.5, PM4, and PM10; ~ 0.3 µm to 10 µm in diameter)
-- [SCD40](https://sensirion.com/de/produkte/katalog/SCD40) (CO2, Temperature)
+- [SCD40](https://sensirion.com/products/catalog/SCD40) (CO2, Temperature)
 - [BME280](https://www.az-delivery.de/products/gy-bme280) (Temperature, Humidity, Pressure)
 - [MQ-2](https://www.az-delivery.de/en/products/gas-sensor-modul) Gas sensor (Methan/Propan, Hydrogen, Smoke, Alcohol vapors). Note that you might require a [ADS1115 A/D converter](https://www.az-delivery.de/en/products/analog-digitalwandler-ads1115-mit-i2c-interface)
 
