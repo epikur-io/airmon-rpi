@@ -1,0 +1,19 @@
+
+# Example test requests with headers (http://httpbin.org/post)
+# start httpbin container:
+#   $ docker pull kennethreitz/httpbin && docker run -p 80:80 kennethreitz/httpbin
+
+POST http://localhost:80/post
+Accept: application/json
+Content-Type: application/json
+User-Agent: custom-client/v1
+x-TEST-VALUE: 42
+
+{"data": 1234}
+
+###
+
+# Get airmon-rpi prometheus metrics
+GET http://localhost:8042/metrics
+
+
