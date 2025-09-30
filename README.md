@@ -13,6 +13,8 @@ Airmon-rpi exposes a prometheus metrics endpoint ([http://localhost:8042/metrics
 
 ## Setup
 
+You can find the wiring description of the hardware (sensors and raspberry pi) [here](./docs/raspberry_pi_wiring.md).
+
 ### Manually build the binary (no docker)
 
 ```bash

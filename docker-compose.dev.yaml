@@ -1,4 +1,6 @@
-version: '3.8'
+version: "3.8"
+
+# This docker compose file if for development on x86/64
 
 services:
   # # Your Go application with I2C/GPIO access
@@ -13,14 +15,19 @@ services:
       # - "/dev/gpiomem:/dev/gpiomem"
     ports:
       - "8042:8042"
-    cap_add:
-      - SYS_RAWIO
+    # cap_add:
+    #   - SYS_RAWIO
     volumes:
       # !DEV: disabled for regular PCs
       # - /sys/class/gpio:/sys/class/gpio
       - ./docker/airmon-rpi:/app/data
     env_file: "./docker/airmon-rpi/docker.env"
     restart: unless-stopped
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    networks:
+      - main
 
   # # Prometheus for metrics collection. Prometheus is **optional** and
   # # useful if you have other containers providing metrics besides airmon-rpi.
@@ -61,7 +68,12 @@ services:
       - ./docker/grafana/provisioning/datasources:/usr/share/grafana/conf/provisioning/datasources
     restart: unless-stopped
     # depends_on:
-      # - prometheus # optional
+    # - prometheus # optional
+    networks:
+      - main
+
+networks:
+  main: {}
 
 volumes:
   grafana-data:

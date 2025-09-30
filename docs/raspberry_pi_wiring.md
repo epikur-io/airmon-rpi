@@ -7,4 +7,4 @@ All the sensors can be accessed via I2C by connecting all the sensor outputs to 
 
 ![Raspberry Pi 4 Pinout](./../assets/images/rpi4-pinout.png)
 
-!TODO
+Connect all the sensors in-/outputs to the I2C1 SDA (GPIO2) & I2C1 SCL (GPIO3), they can all share the same I2C/GPIO pins.

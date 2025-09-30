@@ -1,34 +1,39 @@
-version: '3'
+version: "3"
 
 tasks:
   cleanup:
-    dir: '{{.TASKFILE_DIR}}'
+    dir: "{{.TASKFILE_DIR}}"
     desc: "remove temporary files and build artifacts"
     cmds:
-      - go mod tidy
-      - rm -f ./test_coverage.out
-      - rm -rf ./build
+      - |
+        # update dependencies
+        go mod tidy
+      - |
+        # remove test reports and build artifacts
+        rm -f ./test_coverage.out \
+          ./docker_build_airmon-rpi.log
+        rm -rf ./build
 
   test:
-    dir: '{{.TASKFILE_DIR}}'
+    dir: "{{.TASKFILE_DIR}}"
     desc: "run unit tests"
     cmds:
       - go test -v ./...
 
   test:coverage:
-    dir: '{{.TASKFILE_DIR}}'
+    dir: "{{.TASKFILE_DIR}}"
     desc: "run unit test coverage"
     cmds:
       - go test -v -cover ./... -coverprofile=test_coverage.out
 
   test:coverage:view:
-    dir: '{{.TASKFILE_DIR}}'
+    dir: "{{.TASKFILE_DIR}}"
     desc: "view the unit test coverage report in a browser"
     cmds:
       - go tool cover -html=test_coverage.out
 
   vet:
-    dir: '{{.TASKFILE_DIR}}'
+    dir: "{{.TASKFILE_DIR}}"
     desc: "run go vet"
     cmds:
       - go vet ./...
@@ -38,62 +43,61 @@ tasks:
   # `golangci-lint run --disable-all -E errcheck`
   # using all checks and verbose output: $ golangci-lint run ./... --enable-all
   lint:
-    dir: '{{.TASKFILE_DIR}}'
+    dir: "{{.TASKFILE_DIR}}"
     desc: "run advanced go linter"
     cmds:
       - golangci-lint run ./...
 
   # installing development & ci dependencies
   install:deps:
-    dir: '{{.TASKFILE_DIR}}'
+    dir: "{{.TASKFILE_DIR}}"
     desc: "install development dependencies"
     cmds:
       - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
   # Generic build task
   build:
-    dir: '{{.TASKFILE_DIR}}'
+    dir: "{{.TASKFILE_DIR}}"
     desc: don't use this task directly, use one of the sub-tasks instead
     env:
-      OUTPUT: '{{.OUTPUT}}'
+      BUILD_OUTPUT: "{{.BUILD_OUTPUT}}"
       CGO_ENABLED: '{{.CGO_ENABLED | default "0"}}'
+      GOARM: "{{.GOARM}}"
+      GOARCH: "{{.GOARCH}}"
+      GOOS: "{{.GOOS}}"
     vars:
-      LD_FLAGS: '{{.LD_FLAGS | default "-v"}}' # -ldflags="-s -w" (omit debug symbols and strip unnecessary data, or set variables at compile time e.g. `LD_FLAGS="-X 'main.GIT_COMMIT=$(git rev-parse --short HEAD)'"`) 
+      # -ldflags="-s -w" (omit debug symbols and strip unnecessary data, or set variables at compile time
+      # e.g. `LD_FLAGS="-X 'main.GIT_COMMIT=$(git rev-parse --short HEAD)'"`)
+      LD_FLAGS: '{{.LD_FLAGS | default "-v"}}'
       TRIMPATH: '{{.TRIMPATH | default "true"}}'
       TAGS: '{{.TAGS | default ""}}'
       RACE: '{{.RACE | default ""}}'
-      GOOS: '{{.GOOS}}'
-      GOARCH: '{{.GOARCH}}'
-      GOARM: '{{.GOARM}}'
     cmds:
       - >
         eval "$(go env)"; DEFAULT_OUTPUT="build/airmon-${GOOS}-${GOARCH}${GOARM:+v${GOARM}}";
-        echo "Building ${OUTPUT:=$DEFAULT_OUTPUT} for $GOOS/$GOARCH (Tags: ${TAGS:="N/A"})..."
+        echo "## Building ${BUILD_OUTPUT:=$DEFAULT_OUTPUT} for $GOOS/$GOARCH (Tags: ${TAGS:="N/A"})..."
       - mkdir -p build
-      - echo "#### {{.GOARCH}}"
       - go env
       - |
         eval "$(go env)";
         export DEFAULT_OUTPUT="build/airmon-${GOOS}-${GOARCH}${GOARM:+v${GOARM}}"
-        export OUTPUT="${OUTPUT:=$DEFAULT_OUTPUT}"
+        export BUILD_OUTPUT="${BUILD_OUTPUT:=$DEFAULT_OUTPUT}"
         go build {{if or (eq .RACE "1") (eq .RACE "true")}}-race {{end}}{{if .TAGS}}-tags {{.TAGS}} {{end}}{{if or (eq .TRIMPATH "1") (eq .TRIMPATH "true")}}-trimpath {{end}}-ldflags="{{.LD_FLAGS}}"\
-          -o "${OUTPUT}" ./cmd/airmon/...
-      # - >
-      #   echo "Checking built binary...";
-      #   eval "$(go env)"; 
-      #   export DEFAULT_OUTPUT="build/airmon-${GOOS}-${GOARCH}${GOARM:+v${GOARM}}"; 
-      #   OUTPUT="${OUTPUT:=$DEFAULT_OUTPUT}"; 
-      #   file $OUTPUT;
+          -o "${BUILD_OUTPUT}" ./cmd/airmon/...
 
   build:*:*:
+    dir: "{{.TASKFILE_DIR}}"
+    env:
+      BUILD_OUTPUT: "{{.BUILD_OUTPUT}}"
     vars:
       DEBUG: '{{.DEBUG | default "0"}}'
-      GOOS: '{{index .MATCH 0}}'
+      GOOS: "{{index .MATCH 0}}"
       GOARCH: '{{if eq (index .MATCH 1) "armhf"}}arm{{else}}{{index .MATCH 1}}{{end}}'
       GOARM: '{{if eq (index .MATCH 1) "armhf"}}7{{end}}{{if eq (index .MATCH 1) "arm64"}}{{end}}' # infer ARM version from GOARCH
     cmds:
       - task: build
         vars:
+          BUILD_OUTPUT: "{{.BUILD_OUTPUT}}"
           GOOS: "{{.GOOS}}"
           GOARCH: "{{.GOARCH}}"
           GOARM: "{{.GOARM}}"
@@ -101,6 +105,7 @@ tasks:
             {{if and (ne .DEBUG "1") (ne .DEBUG "true")}}-s -w -v{{else}}-v{{end}}
           TRIMPATH: '{{if and (ne .DEBUG "1") (ne .DEBUG "true")}}0{{else}}1{{end}}'
 
-  # docker:build:image:
-  #   cmds:
-  #     - docker build --no-cache --progress=plain . 2>&1 | tee build.log
+  docker:build:image:
+    dir: "{{.TASKFILE_DIR}}"
+    cmds:
+      - docker build --no-cache --progress=plain -f docker/airmon-rpi/Dockerfile . 2>&1 | tee docker_build_airmon-rpi.log
