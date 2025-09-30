@@ -1,4 +1,18 @@
-#  AirMon - Air quality monitoring for the Raspberry Pi
+<div align="center">
+  <picture>
+    <img alt="airmon-rpi - Air quality monitoring for the raspberry pi."
+         src="./assets/images/logo_v1.png"
+         height="400px">
+  </picture>
+
+[Documentation] | [Contributing]
+</div>
+
+[Documentation]: ./docs/
+[Contributing]: CONTRIBUTING.md
+
+
+##  AirMon - Air quality monitoring for the Raspberry Pi
 
 Monitor environmental air quality and air pollution
 
