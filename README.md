@@ -59,7 +59,7 @@ rclone copy ./ pi-remote:/home/pi/airmon
 Login to the raspberry pi and build/start the docker containers
 
 ```bash
-cd /home/pi/airmon; docker compose build -d; docker compose up -d
+cd /home/pi/airmon; docker compose build; docker compose up -d
 ```
 
 You can now access the Grafana dashboard via [http://raspberrypi:3000](http://raspberrypi:3000) and see the sensor outputs. The user credentials (`GF_SECURITY_ADMIN_USER` and `GF_SECURITY_ADMIN_PASSWORD`) are defined inside the `./docker/grafana/docker.env` file.
