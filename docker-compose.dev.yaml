@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # # Your Go application with I2C/GPIO access
+  airmon-rpi:
+    build:
+      dockerfile: ./docker/airmon-rpi/Dockerfile
+      context: ./
+    image: airmon-rpi:local
+    devices:
+      - "/dev/i2c-1:/dev/i2c-1"
+      # !DEV: disabled for regular PCs
+      # - "/dev/gpiomem:/dev/gpiomem"
+    ports:
+      - "8042:8042"
+    cap_add:
+      - SYS_RAWIO
+    volumes:
+      # !DEV: disabled for regular PCs
+      # - /sys/class/gpio:/sys/class/gpio
+      - ./docker/airmon-rpi:/app/data
+    env_file: "./docker/airmon-rpi/docker.env"
+    restart: unless-stopped
+
+  # # Prometheus for metrics collection. Prometheus is **optional** and
+  # # useful if you have other containers providing metrics besides airmon-rpi.
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - prometheus-data:/prometheus
+  #     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yaml
+  #     - ./prometheus/alert.rules:/etc/prometheus/alert.rules
+  #   env_file: "./docker/prometheus/docker.env"
+  #   command:
+  #     - '--config.file=/etc/prometheus/prometheus.yml'
+  #     - '--storage.tsdb.path=/prometheus'
+  #     - '--web.console.libraries=/etc/prometheus/console_libraries'
+  #     - '--web.console.templates=/etc/prometheus/consoles'
+  #     - '--storage.tsdb.retention.time=200h'
+  #     - '--storage.tsdb.retention.size=512MB'
+  #     - '--web.enable-lifecycle'
+  #   restart: unless-stopped
+  #   networks:
+  #     - monitoring
+  #   depends_on:
+  #     - airmon-rpi
+
+  # # Grafana for dashboards
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    env_file: "./docker/grafana/docker.env"
+    volumes:
+      # grafana config provisioning paths:
+      # /etc/grafana/provisioning/; /usr/share/grafana/conf/provisioning
+      - grafana-data:/var/lib/grafana
+      - ./docker/grafana/provisioning/dashboards:/usr/share/grafana/conf/provisioning/dashboards
+      - ./docker/grafana/provisioning/datasources:/usr/share/grafana/conf/provisioning/datasources
+    restart: unless-stopped
+    # depends_on:
+      # - prometheus # optional
+
+volumes:
+  grafana-data:

@@ -1,0 +1,11 @@
+apiVersion: 1
+
+datasources:
+  - name: 'airmon-rpi'
+    type: 'prometheus'
+    access: 'proxy'
+    url: 'http://airmon-rpi:9090'  # Assuming your Go app exposes Prometheus metrics
+    isDefault: true
+    editable: true
+
+    

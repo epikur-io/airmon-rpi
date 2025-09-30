@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'airmon-rpi'
+    static_configs:
+      - targets: ['airmon-rpi:8042']
+        labels:
+          app: 'airmon-rpi'
+          env: 'production'
+        retention: 8760h  # 1 year
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+rule_files:
+  - /etc/prometheus/alert.rules

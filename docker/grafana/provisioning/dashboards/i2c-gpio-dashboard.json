@@ -1,0 +1,53 @@
+{
+  "id": null,
+  "title": "airmon-rpi",
+  "tags": ["i2c", "gpio", "sensors"],
+  "timezone": "browser",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Temperature Sensor",
+      "type": "graph",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "temperature_celsius",
+          "refId": "A",
+          "legendFormat": "Temperature"
+        }
+      ],
+      "datasource": "airmon-rpi"
+    },
+    {
+      "id": 2,
+      "title": "GPIO States",
+      "type": "stat",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "gpio_state",
+          "refId": "A",
+          "legendFormat": "GPIO State"
+        }
+      ],
+      "datasource": "airmon-rpi"
+    },
+    {
+      "id": 3,
+      "title": "I2C Device Activity",
+      "type": "table",
+      "gridPos": { "x": 0, "y": 8, "w": 24, "h": 8 },
+      "targets": [
+        {
+          "expr": "i2c_device_activity",
+          "refId": "A"
+        }
+      ],
+      "datasource": "airmon-rpi"
+    }
+  ],
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  }
+}

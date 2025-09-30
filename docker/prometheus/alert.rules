@@ -1,0 +1,20 @@
+groups:
+  - name: airmon-rpi-alerts
+    rules:
+      - alert: HighTemperature
+        expr: bme280_temperature_celsius > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High temperature detected"
+          description: "Temperature is above 80°C for more than 5 minutes"
+
+      - alert: HighAirPollution
+        expr: sps30_pm2_5 > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High air pollution detected"
+          description: "Temperature is above 80°C for more than 5 minutes"
