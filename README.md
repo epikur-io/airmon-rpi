@@ -2,8 +2,7 @@
   <picture>
     <img alt="airmon-rpi - Air quality monitoring for the raspberry pi."
          src="./assets/images/logo_v1.png"
-         height="400px">
-  </picture>
+         height="400px">0
 
 [Documentation] | [Contributing]
 </div>
@@ -23,7 +22,7 @@ Supported sensors:
 - [BME280](https://www.az-delivery.de/products/gy-bme280) (Temperature, Humidity, Pressure)
 - [MQ-2](https://www.az-delivery.de/en/products/gas-sensor-modul) Gas sensor (Methan/Propan, Hydrogen, Smoke, Alcohol vapors). Note that you might require a [ADS1115 A/D converter](https://www.az-delivery.de/en/products/analog-digitalwandler-ads1115-mit-i2c-interface)
 
-Airmon-rpi exposes a prometheus metrics endpoint ([http://localhost:8042/metrics](http://localhost:8042/metrics)) containing all the sensor metrics, those will be displayed by Grafana ([http://localhost:3000/](http://localhost:3000/)). 
+Airmon-rpi exposes a prometheus metrics endpoint ([http://localhost:8042/metrics](http://localhost:8042/metrics)) containing all the sensor metrics, those will be displayed by Grafana ([http://localhost:3000/](http://localhost:3000/)).
 
 ## Setup
 
