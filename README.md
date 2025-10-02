@@ -49,6 +49,8 @@ Change the environment variables (credentials etc.) for Grafana and the other co
 - `./docker/grafana/docker.env`
 - `./docker/prometheus/docker.env`
 
+The configuration file of airmon for the specific sensors is located at `./docker/airmon-rpi/airmon_config.yaml`.
+
 **2. Copy the files to the Raspberry Pi**
 
 ```bash
