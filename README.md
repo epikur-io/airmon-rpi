@@ -2,7 +2,8 @@
   <picture>
     <img alt="airmon-rpi - Air quality monitoring for the raspberry pi."
          src="./assets/images/logo_v1.png"
-         height="400px">0
+         height="400px">
+  <picture>
 
 [Documentation] | [Contributing]
 </div>
