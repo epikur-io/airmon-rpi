@@ -1,8 +1,7 @@
 <div align="center">
   <picture>
     <img alt="airmon-rpi - Air quality monitoring for the raspberry pi."
-         src="./assets/images/logo_v1.png"
-         height="400px">
+         src="./assets/images/logo_v1.png">
   <picture>
 
 [Documentation] | [Contributing]
@@ -28,6 +27,23 @@ Airmon-rpi exposes a prometheus metrics endpoint ([http://localhost:8042/metrics
 ## Setup
 
 You can find the wiring description of the hardware (sensors and raspberry pi) [here](./docs/raspberry_pi_wiring.md).
+
+### Requirements
+
+You will need [Go] (Golang) and [Taskfile]. I like to use [vfox] for installing and managing the latest Go version.
+See the vfox [quick-start](https://vfox.dev/guides/quick-start.html) guide.
+
+```bash
+vfox add golang
+vfox install golang@1.25.1
+vfox use -g golang@1.25.1
+```
+
+Once Go is installed we can use it to install [Taskfile]:
+
+```bash
+go install github.com/go-task/task/v3/cmd/task@latest
+```
 
 ### Manually build the binary (no docker)
 
@@ -79,3 +95,8 @@ cd /home/pi/airmon; docker compose build; docker compose up -d
 ```
 
 You can now access the Grafana dashboard via [http://raspberrypi:3000](http://raspberrypi:3000) and see the sensor outputs. The user credentials (`GF_SECURITY_ADMIN_USER` and `GF_SECURITY_ADMIN_PASSWORD`) are defined inside the `./docker/grafana/docker.env` file.
+
+
+[Go]: https://go.dev/
+[Taskfile]: https://taskfile.dev/
+[vfox]: https://vfox.dev/
